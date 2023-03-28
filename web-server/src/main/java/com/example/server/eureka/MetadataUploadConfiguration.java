@@ -1,4 +1,4 @@
-package com.example.client.eureka;
+package com.example.server.eureka;
 
 import com.netflix.appinfo.ApplicationInfoManager;
 import com.netflix.appinfo.InstanceInfo;
@@ -6,6 +6,7 @@ import com.netflix.discovery.EurekaClient;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,19 +30,16 @@ public class MetadataUploadConfiguration implements ApplicationRunner {
         this.instanceInfo = applicationInfoManager.getInfo();
     }
 
-//    @Scheduled(fixedRate = 5 * 1000, initialDelay = 1000)
-//    public void uploadUptime() {
-//        Map<String, String> metadata = new HashMap<>();
-//        metadata.put("timestamp", String.valueOf(System.currentTimeMillis()));
-//        eurekaClient.getApplicationInfoManager().registerAppMetadata(metadata);
-//    }
-
-    @Override
-    public void run(ApplicationArguments args) {
+    @Scheduled(fixedRate = 5 * 1000, initialDelay = 1000)
+    public void uploadMetadata() {
         Map<String, String> metadata = new HashMap<>();
-        metadata.put("timestamp", String.valueOf(System.currentTimeMillis()));
         metadata.put("warmup", String.valueOf(10 * 60 * 1000));
         metadata.put("weight", "80");
         applicationInfoManager.registerAppMetadata(metadata);
+    }
+
+    @Override
+    public void run(ApplicationArguments args) {
+        uploadMetadata();
     }
 }

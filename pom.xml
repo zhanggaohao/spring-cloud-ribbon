@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.boot-version>2.3.3.RELEASE</spring.boot-version>
 		<spring.cloud-version>Hoxton.SR8</spring.cloud-version>
+		<resilience4j-version>1.7.1</resilience4j-version>
 	</properties>
 
 	<dependencyManagement>

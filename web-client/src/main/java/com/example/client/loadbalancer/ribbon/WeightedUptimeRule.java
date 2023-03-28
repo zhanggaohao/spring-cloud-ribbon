@@ -21,6 +21,9 @@ public class WeightedUptimeRule extends RoundRobinRule {
     @Override
     public Server choose(ILoadBalancer lb, Object key) {
         List<Server> serverList = lb.getAllServers();
+        if (serverList.isEmpty()) {
+            return null;
+        }
         int length = serverList.size();
         int[] weights = new int[length];
         int totalWeight = 0;
@@ -58,19 +61,17 @@ public class WeightedUptimeRule extends RoundRobinRule {
     int getWeight(Server server) {
         DiscoveryEnabledServer discoveryEnabledServer = (DiscoveryEnabledServer) server;
         InstanceInfo instanceInfo = discoveryEnabledServer.getInstanceInfo();
+        long serviceUpTimestamp = instanceInfo.getLeaseInfo().getServiceUpTimestamp();
         Map<String, String> metadata = instanceInfo.getMetadata();
         int weight = Integer.parseInt(metadata.getOrDefault("weight", "100"));
         if (weight > 0) {
-            long timestamp = Long.parseLong(metadata.getOrDefault("timestamp", "0L"));
-            if (timestamp > 0) {
-                long uptime = (System.currentTimeMillis() - timestamp);
-                if (uptime < 0) {
-                    return 1;
-                }
-                int warmup = Integer.parseInt(metadata.getOrDefault("warmup", "600000"));
-                if (uptime > 0 && uptime < warmup) {
-                    weight = calculateWarmupWeight((int) uptime, warmup, weight);
-                }
+            long uptime = (System.currentTimeMillis() - serviceUpTimestamp);
+            if (uptime < 0) {
+                return 1;
+            }
+            int warmup = Integer.parseInt(metadata.getOrDefault("warmup", "600000"));
+            if (uptime > 0 && uptime < warmup) {
+                weight = calculateWarmupWeight((int) uptime, warmup, weight);
             }
         }
         return Math.max(weight, 0);

@@ -1,4 +1,4 @@
-package com.example.client.service;
+package com.example.server.controller;
 
 import com.example.client.api.User;
 import com.example.client.api.UserService;
