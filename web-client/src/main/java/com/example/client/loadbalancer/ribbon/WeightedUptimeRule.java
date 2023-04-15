@@ -50,7 +50,7 @@ public class WeightedUptimeRule extends RoundRobinRule {
         if (server != null && server.isAlive()) {
             return server;
         }
-        return null;
+        return super.choose(lb, key);
     }
 
     int calculateWarmupWeight(int uptime, int warmup, int weight) {

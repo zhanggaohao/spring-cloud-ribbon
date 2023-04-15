@@ -2,12 +2,16 @@ package com.example.client;
 
 import com.example.client.api.UserService;
 import com.example.client.loadbalancer.ribbon.UserServiceRibbonConfiguration;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * WebClientApplication
@@ -19,9 +23,23 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients(clients = UserService.class)
 @RibbonClient(value = "user-service", configuration = UserServiceRibbonConfiguration.class)
 @SpringBootApplication
-public class WebClientApplication {
+@EnableScheduling
+public class WebClientApplication implements BeanFactoryAware {
+
+    private BeanFactory beanFactory;
 
     public static void main(String[] args) {
         SpringApplication.run(WebClientApplication.class, args);
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void getUser() {
+        UserService userService = beanFactory.getBean(UserService.class);
+        System.out.println(userService.getUser());
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
     }
 }
