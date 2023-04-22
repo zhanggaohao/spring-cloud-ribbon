@@ -1,4 +1,4 @@
-package com.example.client.micrometer.openfeign;
+package com.example.client.micrometer.binder.openfeign;
 
 import feign.MethodMetadata;
 import feign.RequestInterceptor;

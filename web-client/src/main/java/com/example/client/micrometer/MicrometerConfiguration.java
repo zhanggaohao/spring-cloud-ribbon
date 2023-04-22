@@ -1,7 +1,7 @@
 package com.example.client.micrometer;
 
-import com.example.client.micrometer.openfeign.OpenFeignMeterRegistryCustomizer;
-import com.example.client.micrometer.servo.ServoMeterBinderMetrics;
+import com.example.client.micrometer.binder.openfeign.OpenFeignMeterRegistryCustomizer;
+import com.example.client.micrometer.binder.servo.ServoMeterBinderMetrics;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 
 @Configuration(proxyBeanMethods = false)
-public class OpenFeignMeterConfiguration implements MeterRegistryCustomizer<MeterRegistry> {
+public class MicrometerConfiguration implements MeterRegistryCustomizer<MeterRegistry> {
 
     @Value("${spring.application.name}")
     private String applicationName;
