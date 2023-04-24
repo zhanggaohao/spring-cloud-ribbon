@@ -35,7 +35,8 @@ public class MicrometerConfiguration implements MeterRegistryCustomizer<MeterReg
     @Override
     public void customize(MeterRegistry registry) {
         registry.config().commonTags(Arrays.asList(
-                Tag.of("application", applicationName),
+                Tag.of("application", registration.getServiceId()),
+                Tag.of("instance", registration.getInstanceId()),
                 Tag.of("host", registration.getHost())
         ));
     }

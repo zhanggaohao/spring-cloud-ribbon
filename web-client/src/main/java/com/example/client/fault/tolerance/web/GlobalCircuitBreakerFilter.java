@@ -121,7 +121,6 @@ public class GlobalCircuitBreakerFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        logger.info("Processing Request.");
         circuitBreaker.acquirePermission();
         long start = System.nanoTime();
         try {
